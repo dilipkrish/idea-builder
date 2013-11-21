@@ -12,6 +12,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -31,7 +32,19 @@ public class GenerateBuilderAction extends AnAction {
             // 2. Add it to the file that is currently being edited
             writeChangesToFile(psiClass, builderClass);
             // 3. Add an accessor to the newly created builder
+            PsiMethod accessor = accessorMethod(elementFactory, builderClass, psiClass);
         }
+    }
+
+    private PsiMethod accessorMethod(PsiElementFactory elementFactory, PsiClass builderClass, PsiClass psiClass) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("public static ").append(builderClass.getName())
+                .append(" builder() {")
+                .append(" return new ").append(builderClass.getName()).append("();");
+        sb.append("}");
+        sb.append(System.getProperty("line.separator"));
+
+        return elementFactory.createMethodFromText(sb.toString(), psiClass);
     }
 
     private void writeChangesToFile(final PsiClass psiClass, final PsiClass builderClass) {
