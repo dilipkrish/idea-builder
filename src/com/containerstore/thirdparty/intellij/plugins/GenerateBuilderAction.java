@@ -11,6 +11,10 @@ import com.intellij.psi.util.PsiTreeUtil;
 
 public class GenerateBuilderAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
+        maybeEnablePresentation(e);
+    }
+
+    private void maybeEnablePresentation(AnActionEvent e) {
         PsiClass psiClass = psiClassFromContext(e);
         e.getPresentation().setEnabled(psiClass != null);
     }
