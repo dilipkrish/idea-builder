@@ -4,6 +4,7 @@ import com.google.common.base.CaseFormat;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
@@ -28,8 +29,19 @@ public class GenerateBuilderAction extends AnAction {
             PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(psiClass.getProject());
             PsiClass builderClass = builderClass(elementFactory, psiClass, fields);
             // 2. Add it to the file that is currently being edited
+            writeChangesToFile(psiClass, builderClass);
             // 3. Add an accessor to the newly created builder
         }
+    }
+
+    private void writeChangesToFile(final PsiClass psiClass, final PsiClass builderClass) {
+        new WriteCommandAction.Simple(psiClass.getProject(), psiClass.getContainingFile()) {
+
+            @Override
+            protected void run() throws Throwable {
+                psiClass.add(builderClass);
+            }
+        }.execute();
     }
 
     private PsiClass builderClass(PsiElementFactory elementFactory, PsiClass parentClass, CollectionListModel<PsiField> fields) {
