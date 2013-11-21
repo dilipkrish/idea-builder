@@ -34,6 +34,10 @@
 
   <actions>
     <!-- Add your actions here -->
+      <action id="tcsGenerateBuilder" class="com.containerstore.thirdparty.intellij.plugins.GenerateBuilderAction"
+              text="Builder..." description="Generates a Builder For the Specified Class">
+          <add-to-group group-id="GenerateGroup" anchor="first"/>
+      </action>
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
