@@ -1,5 +1,6 @@
 package com.containerstore.thirdparty.intellij.plugins;
 
+import com.google.common.base.CaseFormat;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
@@ -10,6 +11,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiModifier;
+import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.CollectionListModel;
 
@@ -23,9 +26,38 @@ public class GenerateBuilderAction extends AnAction {
             //TODO:
             // 1. Generate the builder based on the selected fields
             PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(psiClass.getProject());
+            PsiClass builderClass = builderClass(elementFactory, psiClass, fields);
             // 2. Add it to the file that is currently being edited
             // 3. Add an accessor to the newly created builder
         }
+    }
+
+    private PsiClass builderClass(PsiElementFactory elementFactory, PsiClass parentClass, CollectionListModel<PsiField> fields) {
+        String builderClassName = String.format("%sBuilder", parentClass.getName());
+        PsiClass builderClass = elementFactory.createClass(builderClassName);
+        PsiModifierList modifierList = builderClass.getModifierList();
+        if (modifierList != null) {
+            modifierList.setModifierProperty(PsiModifier.STATIC, true);
+        }
+        for (PsiField field : fields.getItems()) {
+            builderClass.add(elementFactory.createField(field.getName(), field.getType()));
+        }
+        for (PsiField field : fields.getItems()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("public ").append(builderClassName).append(" with")
+                    .append(CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, field.getName())).append("(")
+                    .append(field.getType().getCanonicalText())
+                    .append(" ").append(field.getName())
+                    .append(") {");
+            sb.append(" this.").append(field.getName()).append(" = ").append(field.getName()).append(";");
+            sb.append(System.getProperty("line.separator"));
+            sb.append(" return this;");
+            sb.append(System.getProperty("line.separator"));
+            sb.append("}");
+            sb.append(System.getProperty("line.separator"));
+            builderClass.add(elementFactory.createMethodFromText(sb.toString(), builderClass));
+        }
+        return builderClass;
     }
 
     @Override
