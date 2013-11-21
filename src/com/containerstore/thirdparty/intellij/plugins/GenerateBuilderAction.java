@@ -11,7 +11,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 
 public class GenerateBuilderAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
-        // TODO: insert action logic here
+        PsiClass psiClass = psiClassFromContext(e);
+        e.getPresentation().setEnabled(psiClass != null);
     }
 
     private PsiClass psiClassFromContext(AnActionEvent e) {
