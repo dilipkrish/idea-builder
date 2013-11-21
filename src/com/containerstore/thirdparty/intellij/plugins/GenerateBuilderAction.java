@@ -4,8 +4,10 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -20,6 +22,7 @@ public class GenerateBuilderAction extends AnAction {
             CollectionListModel<PsiField> fields = dialog.getFields();
             //TODO:
             // 1. Generate the builder based on the selected fields
+            PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(psiClass.getProject());
             // 2. Add it to the file that is currently being edited
             // 3. Add an accessor to the newly created builder
         }
