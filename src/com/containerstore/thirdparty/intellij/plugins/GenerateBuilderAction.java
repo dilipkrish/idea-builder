@@ -21,6 +21,7 @@ public class GenerateBuilderAction extends AnAction {
             //TODO:
             // 1. Generate the builder based on the selected fields
             // 2. Add it to the file that is currently being edited
+            // 3. Add an accessor to the newly created builder
         }
     }
 
