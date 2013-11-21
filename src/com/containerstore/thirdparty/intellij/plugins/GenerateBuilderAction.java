@@ -83,6 +83,19 @@ public class GenerateBuilderAction extends AnAction {
             sb.append(System.getProperty("line.separator"));
             builderClass.add(elementFactory.createMethodFromText(sb.toString(), builderClass));
         }
+        //TODO: create a method to build the actual object
+        StringBuilder sb = new StringBuilder();
+        sb.append("public ").append(parentClass.getName()).append(" build() {");
+        sb.append(System.getProperty("line.separator"));
+        sb.append("// TODO: wire up the constructor");
+        sb.append(System.getProperty("line.separator"));
+        sb.append("// return new ").append(parentClass.getName()).append("();");
+        sb.append(System.getProperty("line.separator"));
+        sb.append(" throw new UnsupportedOperationException();");
+        sb.append(System.getProperty("line.separator"));
+        sb.append("}");
+        sb.append(System.getProperty("line.separator"));
+        builderClass.add(elementFactory.createMethodFromText(sb.toString(), builderClass));
         return builderClass;
     }
 
