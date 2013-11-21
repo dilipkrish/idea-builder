@@ -14,6 +14,11 @@ public class GenerateBuilderAction extends AnAction {
         maybeEnablePresentation(e);
     }
 
+    @Override
+    public void update(AnActionEvent e) {
+        maybeEnablePresentation(e);
+    }
+
     private void maybeEnablePresentation(AnActionEvent e) {
         PsiClass psiClass = psiClassFromContext(e);
         e.getPresentation().setEnabled(psiClass != null);
